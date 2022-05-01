@@ -14,36 +14,41 @@ export class TasksController {
   constructor(private readonly taskservice: TaskService) {}
 
   @Post()
-  addTask(
+  async addTask(
     @Body('title') taskTitle: string,
     @Body('description') taskDescription: string,
   ) {
-    const generateId = this.taskservice.insertTasks(taskTitle, taskDescription);
+    const generateId = await this.taskservice.insertTasks(
+      taskTitle,
+      taskDescription,
+    );
     return { id: generateId };
   }
 
   @Get()
-  getallTasks() {
-    return this.taskservice.getTasks();
+  async getallTasks() {
+    const products = await this.taskservice.getTasks();
+    return products;
   }
+
   @Get(':id')
-  getProduct(@Param('id') prodId: string) {
-    return this.taskservice.getSingleTask(prodId);
+  getProduct(@Param('id') taskId: string) {
+    return this.taskservice.getSingleTask(taskId);
   }
 
   @Patch(':id')
-  updateTask(
-    @Body('id') taskId: string,
-    @Body('title') taskTitle: string,
-    @Body('description') taskDescription: string,
+  async updateTask(
+    @Param('id') taskId: string,
+    @Body('title') prodTitle: string,
+    @Body('description') prodDesc: string,
   ) {
-    this.taskservice.updateTask(taskId, taskTitle, taskDescription);
+    await this.taskservice.updateTask(taskId, prodTitle, prodDesc);
     return null;
   }
 
   @Delete(':id')
-  removeProduct(@Param('id') prodId: string) {
-    this.taskservice.deleteTask(prodId);
+  async removeProduct(@Param('id') taskId: string) {
+    await this.taskservice.deleteTask(taskId);
     return null;
   }
 }
